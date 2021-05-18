@@ -31,21 +31,21 @@ const SevenDayDashboard = () => {
   return (
     <Grid container spacing={4}>
       <Grid item sm={6} xs={12} >
-      <Paper className={classes.paper} >
-        <Bar
-          data={state}
-          options={{
-            title: {
-              display: true,
-              text: "Average Rainfall per month",
-              fontSize: 20
-            },
-            legend: {
-              display: true,
-              position: "right"
-            }
-          }}
-        />
+        <Paper className={classes.paper} >
+          <Bar
+            data={state}
+            options={{
+              title: {
+                display: true,
+                text: "Average Rainfall per month",
+                fontSize: 20
+              },
+              legend: {
+                display: true,
+                position: "right"
+              }
+            }}
+          />
         </Paper>
       </Grid>
       <Grid item sm={6} xs={12}>
