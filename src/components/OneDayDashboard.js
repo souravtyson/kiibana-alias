@@ -1,8 +1,6 @@
 import { Grid } from "@material-ui/core";
-import React from "react";
-import { Bar } from "react-chartjs-2";
-import { Line } from "react-chartjs-2";
-import { Pie } from "react-chartjs-2";
+import React, { useState, useEffect } from "react";
+import { Bar, Pie } from "react-chartjs-2";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,11 +13,11 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-const state = {
-  labels: ["January", "February", "March", "April", "May"],
+const chartState = {
+  labels: [],
   datasets: [
     {
-      label: "Rainfall",
+      label: "",
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(255, 159, 64, 0.2)',
@@ -29,7 +27,7 @@ const state = {
       ],
       borderColor: "rgba(0,0,0,1)",
       borderWidth: 2,
-      data: [65, 59, 80, 81, 56]
+      data: []
     }
   ]
 };
@@ -37,7 +35,6 @@ const state = {
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
-    
   },
   paper: {
     height: 400,
@@ -67,25 +64,76 @@ const rows = [
 
 const OneDayDashboard = () => {
   const classes = useStyles();
+  const [numberOfHits, setNumberOfHits] = useState([])
+  const [barChart, setBarChart] = useState({})
+  const [pieChart, setPieChart] = useState({})
+  const [tableChart, setTableChart] = useState([])
+  
+  const refactorDataForPie = (pieData) => {
+    const pie = JSON.parse(JSON.stringify(chartState))
+    pieData.forEach((x) => {
+      pie.labels.push(x.key)
+      pie.datasets[0].data.push(x.doc_count)
+      pie.datasets[0].label = "IP with count"
+    })
+    return pie
+  }
+
+  const refactorDataForBar = (barData) => {
+    const bar = JSON.parse(JSON.stringify(chartState))
+    barData.forEach((x) => {
+      bar.labels.push(x.key)
+      bar.datasets[0].data.push(x.doc_count)
+      bar.datasets[0].label = "IP with count"
+    })
+    return bar
+  }
+
+  useEffect(() => {
+    fetch("http://localhost:3001/hits")
+    .then(res => res.json())
+    .then((result) => {
+      setNumberOfHits(result)
+    })
+    fetch("http://localhost:3001/table")
+    .then(res => res.json())
+    .then((result) => {
+      setTableChart(result)
+    })
+    fetch("http://localhost:3001/pie")
+    .then(res => res.json())
+    .then((result) => {
+      setPieChart(refactorDataForPie(result))
+    })
+    fetch("http://localhost:3001/bar")
+    .then(res => res.json())
+    .then((result) => {
+      setBarChart(refactorDataForBar(result))
+    })
+  },[])
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} sm={6}>
         <Card className={classes.root} component={Paper}>
-          <CardContent >
-          <Typography className={classes.title} >
-           Hits 
-          </Typography>
-          <Typography variant="h5" component="h2">
-            20
-          </Typography>
+          {
+            numberOfHits.map((hits) =>           
+            <CardContent >
+              <Typography className={classes.title} >
+               Hits 
+              </Typography>
+              <Typography variant="h5" component="h2">
+                {hits.ip}
+              </Typography>
             </CardContent>
+          )
+          }
         </Card>      
       </Grid>
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper} >
           <Bar
-            data={state}
+            data={barChart}
             options={{
               title: {
                 display: true,
@@ -106,23 +154,17 @@ const OneDayDashboard = () => {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                <TableCell align="right">IP</TableCell>
+                <TableCell>IP Address</TableCell>
+                <TableCell align="right">Domain Name</TableCell>
+                <TableCell align="right">File Name</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">{row.name}</TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
-                  <TableCell align="right">{row.ip}</TableCell>
+              {tableChart.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row">{row.ip_address}</TableCell>
+                  <TableCell align="right">{row.domain_name}</TableCell>
+                  <TableCell align="right">{row.file_name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -133,7 +175,7 @@ const OneDayDashboard = () => {
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
           <Pie
-            data={state}
+            data={pieChart}
             options={{
               title:{
                 display:true,
@@ -154,23 +196,17 @@ const OneDayDashboard = () => {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                <TableCell align="right">IP</TableCell>
+                <TableCell>IP Address</TableCell>
+                <TableCell align="right">Domain Name</TableCell>
+                <TableCell align="right">File Name</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.name}>
-                  <TableCell component="th" scope="row">{row.name}</TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">{row.carbs}</TableCell>
-                  <TableCell align="right">{row.protein}</TableCell>
-                  <TableCell align="right">{row.ip}</TableCell>
+              {tableChart.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell component="th" scope="row">{row.ip_address}</TableCell>
+                  <TableCell align="right">{row.domain_name}</TableCell>
+                  <TableCell align="right">{row.file_name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

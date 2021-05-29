@@ -1,0 +1,65 @@
+{
+  "pie": [
+    { "key": "10.10.32.19", "doc_count": 5334055 },
+    { "key": "10.10.32.80", "doc_count": 5254802 },
+    { "key": "10.10.33.83", "doc_count": 1373180 },
+    { "key": "10.10.33.64", "doc_count": 1170229 },
+    { "key": "10.10.33.84", "doc_count": 949388 },
+    { "key": "10.10.33.86", "doc_count": 921928 },
+    { "key": "10.10.33.97", "doc_count": 793361 },
+    { "key": "10.10.33.106", "doc_count": 609871 },
+    { "key": "10.10.33.154", "doc_count": 549039 },
+    { "key": "125.62.194.242", "doc_count": 534168 }
+  ],
+  "bar": [
+    { "key": "10.10.32.19", "doc_count": 5334055 },
+    { "key": "10.10.32.80", "doc_count": 5254802 },
+    { "key": "10.10.33.83", "doc_count": 1373180 },
+    { "key": "10.10.33.64", "doc_count": 1170229 },
+    { "key": "10.10.33.84", "doc_count": 949388 },
+    { "key": "10.10.33.86", "doc_count": 921928 },
+    { "key": "10.10.33.97", "doc_count": 793361 },
+    { "key": "10.10.33.106", "doc_count": 609871 },
+    { "key": "10.10.33.154", "doc_count": 549039 },
+    { "key": "125.62.194.242", "doc_count": 534168 }
+  ],
+  "table": [
+    {
+      "id": 1,
+      "ip_address": "171.10.245.5",
+      "domain_name": "unicef.org",
+      "file_name": "Quisque.mp3"
+    },
+    {
+      "id": 2,
+      "ip_address": "105.195.40.104",
+      "domain_name": "rambler.ru",
+      "file_name": "AdipiscingElitProin.xls"
+    },
+    {
+      "id": 3,
+      "ip_address": "144.173.246.49",
+      "domain_name": "pbs.org",
+      "file_name": "InConsequat.avi"
+    },
+    {
+      "id": 4,
+      "ip_address": "140.110.199.56",
+      "domain_name": "moonfruit.com",
+      "file_name": "AugueVestibulumAnte.xls"
+    },
+    {
+      "id": 5,
+      "ip_address": "237.94.166.247",
+      "domain_name": "unc.edu",
+      "file_name": "CurabiturGravidaNisi.gif"
+    },
+    {
+      "id": 6,
+      "ip_address": "176.95.100.121",
+      "domain_name": "illinois.edu",
+      "file_name": "VolutpatEratQuisque.gif"
+    }
+  ],
+  "hits": [{ "ip": 192 }]
+}
