@@ -1,5 +1,5 @@
-import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -11,10 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import OneDayDashboard from './OneDayDashboard'
-import SevenDayDashboard from './SevenDayDashboard';
-import ThirtyDayDashboard from './ThirtyDayDashboard';
-import OneYearDashboard from './OneYearDashboard';
+import Dashboard from './Dashboard';
 
 const drawerWidth = 240;
 
@@ -43,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SideBar() {
   const classes = useStyles();
-  const sideBarOption = [{label : '1 Day', path: "/"}, {label: '7 Days', path: "seven"}, {label: '30 Days', path: 'thirty'}, {label: '1 Year', path: 'year'}]
-  
+  const sideBarOption = [{label: '7 Days', path: "seven", days: 7}, {label: '30 Days', path: 'thirty', days: 30}]
+  const [defaultPath] = useState(7)
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -66,7 +63,7 @@ export default function SideBar() {
         <div className={classes.drawerContainer}>
           <List>
             {sideBarOption.map((text) => (
-                <ListItem component={Link} to={text.path} button key={text.label}>
+                <ListItem component={Link} to={`/${text.days}`} button key={text.label}>
                   <ListItemText primary={text.label} />
                 </ListItem>
             ))}
@@ -76,10 +73,16 @@ export default function SideBar() {
       <main className={classes.content}>
           <Toolbar />
           <Switch>
-            <Route path="/" component={OneDayDashboard} exact />
-            <Route path="/seven" component={SevenDayDashboard} />
-            <Route path="/thirty" component={ThirtyDayDashboard} />
-            <Route path="/year" component={OneYearDashboard} />
+              <Route
+                exact
+                path="/"
+                render={() => {
+                    return (
+                      <Redirect to={`/${defaultPath}`} /> 
+                    )
+                }}
+              />
+            <Route path="/:days" component={Dashboard}/>
           </Switch>
       </main>
     </div>

@@ -61,5 +61,6 @@
       "file_name": "VolutpatEratQuisque.gif"
     }
   ],
-  "hits": [{ "ip": 192 }]
+  "hits": [{ "value": 1949583103042, "labels": "Logs insertion rate per day", "unit": "Count"}],
+  "networkTraffic": [{ "value": 95.5, "labels": "Network Traffic", "unit": "GB"}]
 }

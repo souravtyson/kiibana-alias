@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SevenDayDashboard = () => {
+const SevenDayDashboard_old = () => {
   const classes = useStyles();
 
   return (
@@ -90,4 +90,4 @@ const SevenDayDashboard = () => {
   );
 };
 
-export default SevenDayDashboard;
+export default SevenDayDashboard_old;
