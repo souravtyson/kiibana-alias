@@ -61,7 +61,9 @@ const Dashboard = ({match:{params:{days}}}) => {
   const [numberOfTraffic, setNumberOfTraffic] = useState([])
   const [barChart, setBarChart] = useState({})
   const [pieChart, setPieChart] = useState({})
+  const [secondPieChart, setSecondPieChart] = useState({})
   const [tableChart, setTableChart] = useState([])
+  const [secondTableChart, setSecondTableChart] = useState([])
   
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState))
@@ -99,10 +101,20 @@ const Dashboard = ({match:{params:{days}}}) => {
     .then((result) => {
       setTableChart(result)
     })
+    fetch(`http://localhost:3001/table?days=${days}`)
+    .then(res => res.json())
+    .then((result) => {
+      setSecondTableChart(result)
+    })
     fetch(`http://localhost:3001/pie?days=${days}`)
     .then(res => res.json())
     .then((result) => {
       setPieChart(refactorDataForPie(result))
+    })
+    fetch(`http://localhost:3001/pie?days=${days}`)
+    .then(res => res.json())
+    .then((result) => {
+      setSecondPieChart(refactorDataForPie(result))
     })
     fetch(`http://localhost:3001/bar?days=${days}`)
     .then(res => res.json())
@@ -167,7 +179,7 @@ const Dashboard = ({match:{params:{days}}}) => {
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
           <Pie
-            data={pieChart}
+            data={secondPieChart}
             options={{
               title:{
                 display:true,
@@ -213,7 +225,7 @@ const Dashboard = ({match:{params:{days}}}) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tableChart.map((row) => (
+              {secondTableChart.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell component="th" scope="row">{row.ip_address}</TableCell>
                   <TableCell align="right">{row.domain_name}</TableCell>
