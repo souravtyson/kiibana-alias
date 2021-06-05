@@ -1,17 +1,14 @@
 import { Grid } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
-import { Bar, Pie } from "react-chartjs-2";
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
+import MetricChart from "components/charts/MetricChart";
+import PieChart from "components/charts/PieChart";
+import BarChart from "components/charts/BarChart";
+import DataTable from "components/charts/DataTable";
+import axios from "services/axios";
+import request from "services/request"
+import { sizing } from '@material-ui/system';
 
 const chartState = {
   labels: [],
@@ -33,27 +30,15 @@ const chartState = {
 };
 
 const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
   paper: {
     height: 400,
     width: 700,
   },
-  root: {
-    textAlign : "center"
-  },
-  title: {
-    fontSize: 14,
-  },
-  marginTop: {
-    marginTop: 120
+  barFull: {
+    height: 400,
+    minWidth: "100vh"
   }
 });
-
-const getFormattedNumber = (num) => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
 const Dashboard = ({match:{params:{days}}}) => {
   const classes = useStyles();
@@ -67,197 +52,132 @@ const Dashboard = ({match:{params:{days}}}) => {
   
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState))
-    pieData.forEach((x) => {
-      pie.labels.push(x.key)
-      pie.datasets[0].data.push(x.doc_count)
-      pie.datasets[0].label = "IP with count"
+    pieData.forEach((key,index) => {
+      key.pie.forEach((dataSet) => {
+        pie.labels.push(dataSet.key)
+        pie.datasets[index].data.push(dataSet.doc_count)
+      })
+      pie.datasets[index].label = key.label
     })
     return pie
   }
 
   const refactorDataForBar = (barData) => {
     const bar = JSON.parse(JSON.stringify(chartState))
-    barData.forEach((x) => {
-      bar.labels.push(x.key)
-      bar.datasets[0].data.push(x.doc_count)
-      bar.datasets[0].label = "IP with count"
+    barData.forEach((key,index) => {
+      key.bar.forEach((dataSet) => {
+        bar.labels.push(dataSet.key)
+        bar.datasets[index].data.push(dataSet.doc_count)
+      })
+      bar.datasets[index].label = key.label
     })
     return bar
   }
 
+  const fetchData = async () => {
+    const resp = await axios.get(`${request.logInsertionRate}${days}`)
+    setNumberOfHits(resp.data)
+  }  
+
+  const fetchData2 = async () => {
+    const resp = await axios.get(`${request.networkTraffic}${days}`)
+    setNumberOfTraffic(resp.data)
+  }
+
+  const fetchData3 = async () => {
+    const resp = await axios.get(`${request.table}${days}`)
+    setTableChart(resp.data)
+    setSecondTableChart(resp.data)
+  }
+
+  const fetchData4 = async () => {
+    const resp = await axios.get(`${request.pie}${days}`)
+    setPieChart(refactorDataForPie(resp.data))
+    setSecondPieChart(refactorDataForPie(resp.data))
+  }
+
+  const fetchData5 = async () => {
+    const resp = await axios.get(`${request.bar}${days}`)
+    setBarChart(refactorDataForBar(resp.data))
+  }
+
   useEffect(() => {
-    fetch(`http://localhost:3001/hits?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setNumberOfHits(result)
-    })
-    fetch(`http://localhost:3001/networkTraffic?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setNumberOfTraffic(result)
-    })
-    fetch(`http://localhost:3001/table?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setTableChart(result)
-    })
-    fetch(`http://localhost:3001/table?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setSecondTableChart(result)
-    })
-    fetch(`http://localhost:3001/pie?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setPieChart(refactorDataForPie(result))
-    })
-    fetch(`http://localhost:3001/pie?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setSecondPieChart(refactorDataForPie(result))
-    })
-    fetch(`http://localhost:3001/bar?days=${days}`)
-    .then(res => res.json())
-    .then((result) => {
-      setBarChart(refactorDataForBar(result))
-    })
+    fetchData()
+    fetchData2()
+    fetchData3()
+    fetchData4()
+    fetchData5()
   },[days])
 
   return (
     <Grid container spacing={4}>
-      {
-        numberOfHits.map((hits, index) =>           
-          <Grid item xs={12} sm={6}>
-            <Card className={`${classes.paper} ${classes.root}`} component={Paper}>
-              <CardContent key={index} className={classes.marginTop}>
-                <Typography variant="h6" component="h6" >
-                  {hits.labels} 
-                </Typography>
-                <Typography variant="h2" component="h2">
-                  { hits.unit === 'Count' ? getFormattedNumber(hits.value) : `${hits.value} ${hits.unit}` }
-                </Typography>
-              </CardContent>
-            </Card>      
-          </Grid>
-        )
-      }
-      {
-        numberOfTraffic.map((traffic, index) =>           
-          <Grid item xs={12} sm={6}>
-            <Card className={`${classes.paper} ${classes.root}`} component={Paper}>
-              <CardContent key={index} className={classes.marginTop}>
-                <Typography variant="h6" component="h6" >
-                  {traffic.labels} 
-                </Typography>
-                <Typography variant="h2" component="h2">
-                  { traffic.unit === 'Count' ? getFormattedNumber(traffic.value) : `${traffic.value} ${traffic.unit}` }
-                </Typography>
-              </CardContent>
-            </Card>      
-          </Grid>
-        )
-      }      
+      <Grid item xs={12} sm={6}>
+        {
+          numberOfHits.map((hits) =>           
+              <MetricChart hits={hits} />
+          )
+        }
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        {
+          numberOfTraffic.map((traffic) =>
+              <MetricChart hits={traffic} />      
+          )
+        }    
+      </Grid>  
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
-          <Pie
-            data={pieChart}
-            options={{
-              title:{
-                display:true,
-                text:'Average Rainfall per month',
-                fontSize:20
-              },
-              legend:{
-                display:true,
-                position:'right'
-              },
-              maintainAspectRatio: false
-            }}
-          />
+          <PieChart pieData={pieChart} />
         </Paper>
       </Grid>
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
-          <Pie
-            data={secondPieChart}
-            options={{
-              title:{
-                display:true,
-                text:'Average Rainfall per month',
-                fontSize:20
-              },
-              legend:{
-                display:true,
-                position:'right'
-              },
-              maintainAspectRatio: false
-            }}
-          />
-        </Paper>
-      </Grid>      
-      <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper} >
-          <Bar
-            data={barChart}
-            options={{
-              title: {
-                display: true,
-                text: "Average Rainfall per month",
-                fontSize: 20
-              },
-              legend: {
-                display: true,
-                position: "right"
-              }
-            }}
-          />
+          <PieChart pieData={secondPieChart}/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
-      <Paper className={classes.paper} >
-        <TableContainer>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>IP Address</TableCell>
-                <TableCell align="right">Domain Name</TableCell>
-                <TableCell align="right">File Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {secondTableChart.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell component="th" scope="row">{row.ip_address}</TableCell>
-                  <TableCell align="right">{row.domain_name}</TableCell>
-                  <TableCell align="right">{row.file_name}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {
+          numberOfTraffic.map((traffic) =>           
+              <MetricChart hits={traffic} />      
+          )
+        }         
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper} >
+          <DataTable tableData={secondTableChart}/>
         </Paper>       
       </Grid>
       <Grid item xs={12} sm={12}>
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>IP Address</TableCell>
-                <TableCell align="right">Domain Name</TableCell>
-                <TableCell align="right">File Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tableChart.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell component="th" scope="row">{row.ip_address}</TableCell>
-                  <TableCell align="right">{row.domain_name}</TableCell>
-                  <TableCell align="right">{row.file_name}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>          
+        <Paper >
+          <BarChart barData={barChart}/>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper >
+          <BarChart barData={barChart}/>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper >
+          <BarChart barData={barChart}/>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper >
+          <BarChart barData={barChart}/>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <Paper className={classes.paper}>
+          <DataTable tableData={tableChart}/>      
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        {
+          numberOfHits.map((hits) =>           
+              <MetricChart hits={hits} />
+          )
+        }
       </Grid>
     </Grid>
   );

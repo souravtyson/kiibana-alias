@@ -1,27 +1,47 @@
 {
   "pie": [
-    { "key": "10.10.32.19", "doc_count": 5334055 },
-    { "key": "10.10.32.80", "doc_count": 5254802 },
-    { "key": "10.10.33.83", "doc_count": 1373180 },
-    { "key": "10.10.33.64", "doc_count": 1170229 },
-    { "key": "10.10.33.84", "doc_count": 949388 },
-    { "key": "10.10.33.86", "doc_count": 921928 },
-    { "key": "10.10.33.97", "doc_count": 793361 },
-    { "key": "10.10.33.106", "doc_count": 609871 },
-    { "key": "10.10.33.154", "doc_count": 549039 },
-    { "key": "125.62.194.242", "doc_count": 534168 }
+    {
+      "label": "Top 10 Category By Severity Types - Sonicwall",
+      "pie": [
+        {
+          "key": "ICMP Echo Reply",
+          "doc_count": 167,
+          "severity": "Low"
+        },
+        {
+          "key": "ICMP PING *NIX",
+          "doc_count": 35,
+          "severity": "Low"
+        },
+        {
+          "key": "ICMP PING",
+          "doc_count": 35,
+          "severity": "Low"
+        }
+      ]
+    }
   ],
   "bar": [
-    { "key": "10.10.32.19", "doc_count": 5334055 },
-    { "key": "10.10.32.80", "doc_count": 5254802 },
-    { "key": "10.10.33.83", "doc_count": 1373180 },
-    { "key": "10.10.33.64", "doc_count": 1170229 },
-    { "key": "10.10.33.84", "doc_count": 949388 },
-    { "key": "10.10.33.86", "doc_count": 921928 },
-    { "key": "10.10.33.97", "doc_count": 793361 },
-    { "key": "10.10.33.106", "doc_count": 609871 },
-    { "key": "10.10.33.154", "doc_count": 549039 },
-    { "key": "125.62.194.242", "doc_count": 534168 }
+    {
+      "label": "Top 10 Category By Severity Types - Sonicwall",
+      "bar": [
+        {
+          "key": "ICMP Echo Reply",
+          "doc_count": 167,
+          "severity": "Low"
+        },
+        {
+          "key": "ICMP PING *NIX",
+          "doc_count": 35,
+          "severity": "Low"
+        },
+        {
+          "key": "ICMP PING",
+          "doc_count": 35,
+          "severity": "Low"
+        }
+      ]
+    }
   ],
   "table": [
     {
@@ -61,6 +81,14 @@
       "file_name": "VolutpatEratQuisque.gif"
     }
   ],
-  "hits": [{ "value": 1949583103042, "labels": "Logs insertion rate per day", "unit": "Count"}],
-  "networkTraffic": [{ "value": 95.5, "labels": "Network Traffic", "unit": "GB"}]
+  "hits": [
+    {
+      "value": 1949583103042,
+      "labels": "Logs insertion rate per day",
+      "unit": "Count"
+    }
+  ],
+  "networkTraffic": [
+    { "value": 95.5, "labels": "Network Traffic", "unit": "GB" }
+  ]
 }
