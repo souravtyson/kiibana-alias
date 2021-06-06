@@ -49,6 +49,7 @@ const Dashboard = ({match:{params:{days}}}) => {
   const [secondPieChart, setSecondPieChart] = useState({})
   const [tableChart, setTableChart] = useState([])
   const [secondTableChart, setSecondTableChart] = useState([])
+  const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] = useState([])
   
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState))
@@ -69,7 +70,7 @@ const Dashboard = ({match:{params:{days}}}) => {
         bar.labels.push(dataSet.key)
         bar.datasets[index].data.push(dataSet.doc_count)
       })
-      bar.datasets[index].label = key.label
+      bar.datasets[index].label = key.labels
     })
     return bar
   }
@@ -83,6 +84,12 @@ const Dashboard = ({match:{params:{days}}}) => {
     const resp = await axios.get(`${request.networkTraffic}${days}`)
     setNumberOfTraffic(resp.data)
   }
+  
+
+  const threatSeverityMetric = async () => {
+    const resp = await axios.get(`${request.threatSeverityMetric}${days}`)
+    setNumberOfThreatSeverityMetric(resp.data)
+  }
 
   const fetchData3 = async () => {
     const resp = await axios.get(`${request.table}${days}`)
@@ -91,13 +98,17 @@ const Dashboard = ({match:{params:{days}}}) => {
   }
 
   const fetchData4 = async () => {
-    const resp = await axios.get(`${request.pie}${days}`)
+    const resp = await axios.get(`${request.srcip}${days}`)
     setPieChart(refactorDataForPie(resp.data))
+  }
+  
+  const destinationip = async () => {
+    const resp = await axios.get(`${request.destip}${days}`)
     setSecondPieChart(refactorDataForPie(resp.data))
   }
 
   const fetchData5 = async () => {
-    const resp = await axios.get(`${request.bar}${days}`)
+    const resp = await axios.get(`${request.top_ten_category_by_severity_types}${days}`)
     setBarChart(refactorDataForBar(resp.data))
   }
 
@@ -107,6 +118,8 @@ const Dashboard = ({match:{params:{days}}}) => {
     fetchData3()
     fetchData4()
     fetchData5()
+	destinationip()
+	threatSeverityMetric()
   },[days])
 
   return (
@@ -137,7 +150,7 @@ const Dashboard = ({match:{params:{days}}}) => {
       </Grid>
       <Grid item xs={12} sm={6}>
         {
-          numberOfTraffic.map((traffic) =>           
+          numberOfThreatSeverityMetric.map((traffic) =>           
               <MetricChart hits={traffic} />      
           )
         }         
