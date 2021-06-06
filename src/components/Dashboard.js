@@ -7,8 +7,10 @@ import PieChart from "components/charts/PieChart";
 import BarChart from "components/charts/BarChart";
 import DataTable from "components/charts/DataTable";
 import axios from "services/axios";
-import request from "services/request"
-import { sizing } from '@material-ui/system';
+import request from "services/request";
+import colors from "styles/color.js"
+
+
 
 const chartState = {
   labels: [],
@@ -40,7 +42,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Dashboard = ({match:{params:{days}}}) => {
+const Dashboard = ({ match: { params: { days } } }) => {
   const classes = useStyles();
   const [numberOfHits, setNumberOfHits] = useState([])
   const [numberOfTraffic, setNumberOfTraffic] = useState([])
@@ -50,10 +52,10 @@ const Dashboard = ({match:{params:{days}}}) => {
   const [tableChart, setTableChart] = useState([])
   const [secondTableChart, setSecondTableChart] = useState([])
   const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] = useState([])
-  
+
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState))
-    pieData.forEach((key,index) => {
+    pieData.forEach((key, index) => {
       key.pie.forEach((dataSet) => {
         pie.labels.push(dataSet.key)
         pie.datasets[index].data.push(dataSet.doc_count)
@@ -63,14 +65,39 @@ const Dashboard = ({match:{params:{days}}}) => {
     return pie
   }
 
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
   const refactorDataForBar = (barData) => {
     const bar = JSON.parse(JSON.stringify(chartState))
-    barData.forEach((key,index) => {
-      key.bar.forEach((dataSet) => {
-        bar.labels.push(dataSet.key)
-        bar.datasets[index].data.push(dataSet.doc_count)
-      })
-      bar.datasets[index].label = key.labels
+    const dateStamp = [...new Set(barData[0].bar.map(severity => severity.key_time))]
+    bar.labels = [...dateStamp]
+    barData.forEach((key) => {
+      bar.datasets = key.bar.reduce((acc, data, index) => {
+        let index2 = acc.findIndex((x) => x.label === data.key)
+        let dateStampIndex = dateStamp.indexOf(data.key_time)
+        if (index2 === -1) {
+          let g = {
+            label: data.key,
+            data: new Array(dateStamp.length).fill(0),
+            stack: "1",
+            backgroundColor: colors[Math.floor(Math.random() * (colors.length-1))],
+            borderColor: "rgba(0,0,0,1)",
+            borderWidth: 2,
+          }
+          g.data[dateStampIndex] = data.doc_count
+          acc.push(g)
+        } else {
+          acc[index2].data[dateStampIndex] = data.doc_count
+        }
+        return acc
+      }, [])
     })
     return bar
   }
@@ -78,13 +105,13 @@ const Dashboard = ({match:{params:{days}}}) => {
   const fetchData = async () => {
     const resp = await axios.get(`${request.logInsertionRate}${days}`)
     setNumberOfHits(resp.data)
-  }  
+  }
 
   const fetchData2 = async () => {
     const resp = await axios.get(`${request.networkTraffic}${days}`)
     setNumberOfTraffic(resp.data)
   }
-  
+
 
   const threatSeverityMetric = async () => {
     const resp = await axios.get(`${request.threatSeverityMetric}${days}`)
@@ -101,7 +128,7 @@ const Dashboard = ({match:{params:{days}}}) => {
     const resp = await axios.get(`${request.srcip}${days}`)
     setPieChart(refactorDataForPie(resp.data))
   }
-  
+
   const destinationip = async () => {
     const resp = await axios.get(`${request.destip}${days}`)
     setSecondPieChart(refactorDataForPie(resp.data))
@@ -118,26 +145,26 @@ const Dashboard = ({match:{params:{days}}}) => {
     fetchData3()
     fetchData4()
     fetchData5()
-	destinationip()
-	threatSeverityMetric()
-  },[days])
+    destinationip()
+    threatSeverityMetric()
+  }, [days])
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} sm={6}>
         {
-          numberOfHits.map((hits) =>           
-              <MetricChart hits={hits} />
+          numberOfHits.map((hits) =>
+            <MetricChart hits={hits} />
           )
         }
       </Grid>
       <Grid item xs={12} sm={6}>
         {
           numberOfTraffic.map((traffic) =>
-              <MetricChart hits={traffic} />      
+            <MetricChart hits={traffic} />
           )
-        }    
-      </Grid>  
+        }
+      </Grid>
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
           <PieChart pieData={pieChart} />
@@ -145,50 +172,50 @@ const Dashboard = ({match:{params:{days}}}) => {
       </Grid>
       <Grid item sm={6} xs={12}>
         <Paper className={classes.paper} >
-          <PieChart pieData={secondPieChart}/>
+          <PieChart pieData={secondPieChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
         {
-          numberOfThreatSeverityMetric.map((traffic) =>           
-              <MetricChart hits={traffic} />      
+          numberOfThreatSeverityMetric.map((traffic) =>
+            <MetricChart hits={traffic} />
           )
-        }         
+        }
       </Grid>
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper} >
-          <DataTable tableData={secondTableChart}/>
-        </Paper>       
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper >
-          <BarChart barData={barChart}/>
+          <DataTable tableData={secondTableChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper >
-          <BarChart barData={barChart}/>
+          <BarChart barData={barChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper >
-          <BarChart barData={barChart}/>
+          <BarChart barData={barChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper >
-          <BarChart barData={barChart}/>
+          <BarChart barData={barChart} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper >
+          <BarChart barData={barChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper}>
-          <DataTable tableData={tableChart}/>      
+          <DataTable tableData={tableChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
         {
-          numberOfHits.map((hits) =>           
-              <MetricChart hits={hits} />
+          numberOfHits.map((hits) =>
+            <MetricChart hits={hits} />
           )
         }
       </Grid>

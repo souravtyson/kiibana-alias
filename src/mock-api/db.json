@@ -1,7 +1,7 @@
 {
-  "pie": [
+  "srcip": [
     {
-      "label": "Top 10 Category By Severity Types - Sonicwall",
+      "labels": "Top 10 Category By Severity Types - Sonicwall",
       "pie": [
         {
           "key": "ICMP Echo Reply",
@@ -21,10 +21,10 @@
       ]
     }
   ],
-  "bar": [
+  "destip": [
     {
-      "label": "Top 10 Category By Severity Types - Sonicwall",
-      "bar": [
+      "labels": "Top 10 Category By Severity Types - Sonicwall",
+      "pie": [
         {
           "key": "ICMP Echo Reply",
           "doc_count": 167,
@@ -39,6 +39,73 @@
           "key": "ICMP PING",
           "doc_count": 35,
           "severity": "Low"
+        }
+      ]
+    }
+  ],
+  "topTenCategoryBySeverityType": [
+    {
+      "labels": "Top 10 Category By Severity Types - Sonicwall",
+      "bar": [
+        {
+          "key": "Temp",
+          "doc_count": 69,
+          "severity": "Khaki",
+          "key_time": "2021-02-11"
+        },
+        {
+          "key": "Solarbreeze",
+          "doc_count": 40,
+          "severity": "Puce",
+          "key_time": "2021-06-03"
+        },
+        {
+          "key": "Tempsoft",
+          "doc_count": 14,
+          "severity": "Fuscia",
+          "key_time": "2021-03-16"
+        },
+        {
+          "key": "Temp",
+          "doc_count": 48,
+          "severity": "Orange",
+          "key_time": "2021-01-09"
+        },
+        {
+          "key": "Zoolab",
+          "doc_count": 13,
+          "severity": "Turquoise",
+          "key_time": "2021-03-16"
+        },
+        {
+          "key": "Toughjoyfax",
+          "doc_count": 79,
+          "severity": "Khaki",
+          "key_time": "2021-03-22"
+        },
+        {
+          "key": "Lotlux",
+          "doc_count": 44,
+          "severity": "Purple",
+          "key_time": "2021-05-18"
+        },
+        {
+          "key": "Andalax",
+          "doc_count": 16,
+          "severity": "Crimson",
+          "key_time": "2021-01-29"
+        },
+        {
+          "key": "Ventosanzap",
+          "doc_count": 21,
+          "severity": "Khaki",
+          "key_time": "2021-03-25"
+        },
+        {
+          "key": "Voyatouch",
+          "doc_count": 71,
+          "severity": "Aquamarine",
+          "key_time": "2021-01-19"
         }
       ]
     }
@@ -81,14 +148,15 @@
       "file_name": "VolutpatEratQuisque.gif"
     }
   ],
-  "hits": [
+  "log_insertion_count": [
     {
       "value": 1949583103042,
       "labels": "Logs insertion rate per day",
       "unit": "Count"
     }
   ],
-  "networkTraffic": [
-    { "value": 95.5, "labels": "Network Traffic", "unit": "GB" }
+  "nwtraffic": [{ "value": 95.5, "labels": "Network Traffic", "unit": "GB" }],
+  "threatBySeverity": [
+    { "value": 95.5, "labels": "Threat By Severity Count", "unit": "GB" }
   ]
 }

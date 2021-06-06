@@ -1,0 +1,8 @@
+{
+  "/log_insertion_count?days=:days": "/log_insertion_count",
+  "/nwtraffic?days=:days": "/nwtraffic",
+  "/srcip/top_ten?days=:days": "/srcip",
+  "/destip/top_ten?days=:days": "/destip",
+  "/threat_by_severity_count?days=:days": "/threatBySeverity",
+  "/top_ten_category_by_severity_types?days=:days": "/topTenCategoryBySeverityType"
+}

@@ -14,7 +14,19 @@ function BarChart({ barData }) {
                 legend: {
                     display: true,
                     position: "right"
-                }
+                },
+                scales: {
+                    xAxes: [
+                      {
+                        stacked: true,
+                      },
+                    ],
+                    yAxes: [
+                      {
+                        stacked: true,
+                      },
+                    ],
+                  }
             }}
         />
     );
