@@ -27,11 +27,11 @@ function MetricChart({ hits }) {
     return (
         <Card className={`${classes.paper} ${classes.root}`} component={Paper}>
             <CardContent key={`${hits.value} ${hits.unit}`} className={classes.marginTop}>
-                <Typography variant="h6" component="h6" >
-                    {hits.labels}
-                </Typography>
                 <Typography variant="h2" component="h2">
                     {hits.unit === 'Count' ? getFormattedNumber(hits.value) : `${hits.value} ${hits.unit}`}
+                </Typography>
+				<Typography variant="h6" component="h6" >
+                    {hits.labels}
                 </Typography>
             </CardContent>
         </Card>

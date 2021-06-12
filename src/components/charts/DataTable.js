@@ -20,17 +20,15 @@ function DataTable({ tableData }) {
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>IP Address</TableCell>
-                        <TableCell align="right">Domain Name</TableCell>
-                        <TableCell align="right">File Name</TableCell>
+                        <TableCell>IPS Severity</TableCell>
+                        <TableCell align="right">Count</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {tableData.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell component="th" scope="row">{row.ip_address}</TableCell>
-                            <TableCell align="right">{row.domain_name}</TableCell>
-                            <TableCell align="right">{row.file_name}</TableCell>
+                    {tableData.map((row, index) => (
+                        <TableRow key={index}>
+                            <TableCell component="th" scope="row">{row.key}</TableCell>
+                            <TableCell align="right">{row.doc_count}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

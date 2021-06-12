@@ -47,11 +47,17 @@ const Dashboard = ({ match: { params: { days } } }) => {
   const [numberOfHits, setNumberOfHits] = useState([])
   const [numberOfTraffic, setNumberOfTraffic] = useState([])
   const [barChart, setBarChart] = useState({})
+  const [topUserWithConfigAccessBar, setTopUserWithConfigAccessBar] = useState({})
   const [pieChart, setPieChart] = useState({})
   const [secondPieChart, setSecondPieChart] = useState({})
   const [tableChart, setTableChart] = useState([])
   const [secondTableChart, setSecondTableChart] = useState([])
   const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] = useState([])
+  const [barThreatSeverityTypes, setBarThreatSeverityTypes] = useState([])
+  const [uniqueUsersWithConfigAccess, setUniqueUsersWithConfigAccess] = useState([])
+  const [barAdministrativeActivity, setBarAdministrativeActivity] = useState([])
+  
+  
 
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState))
@@ -76,12 +82,12 @@ const Dashboard = ({ match: { params: { days } } }) => {
 
   const refactorDataForBar = (barData) => {
     const bar = JSON.parse(JSON.stringify(chartState))
-    const dateStamp = [...new Set(barData[0].bar.map(severity => severity.key_time))]
+    const dateStamp = [...new Set(barData[0].bar.map(severity => severity.date))]
     bar.labels = [...dateStamp]
     barData.forEach((key) => {
       bar.datasets = key.bar.reduce((acc, data, index) => {
         let index2 = acc.findIndex((x) => x.label === data.key)
-        let dateStampIndex = dateStamp.indexOf(data.key_time)
+        let dateStampIndex = dateStamp.indexOf(data.date)
         if (index2 === -1) {
           let g = {
             label: data.key,
@@ -99,6 +105,7 @@ const Dashboard = ({ match: { params: { days } } }) => {
         return acc
       }, [])
     })
+	console.log(bar)
     return bar
   }
 
@@ -106,6 +113,12 @@ const Dashboard = ({ match: { params: { days } } }) => {
     const resp = await axios.get(`${request.logInsertionRate}${days}`)
     setNumberOfHits(resp.data)
   }
+  
+  const metricUniqueUsersWithConfigAccess = async () => {
+    const resp = await axios.get(`${request.unique_users_with_config_access}${days}`)
+    setUniqueUsersWithConfigAccess(resp.data)
+  }
+  
 
   const fetchData2 = async () => {
     const resp = await axios.get(`${request.networkTraffic}${days}`)
@@ -119,9 +132,8 @@ const Dashboard = ({ match: { params: { days } } }) => {
   }
 
   const fetchData3 = async () => {
-    const resp = await axios.get(`${request.table}${days}`)
-    setTableChart(resp.data)
-    setSecondTableChart(resp.data)
+    const resp = await axios.get(`${request.ips_severity_table_count}${days}`)
+    setSecondTableChart(resp.data[0].table)
   }
 
   const fetchData4 = async () => {
@@ -138,6 +150,22 @@ const Dashboard = ({ match: { params: { days } } }) => {
     const resp = await axios.get(`${request.top_ten_category_by_severity_types}${days}`)
     setBarChart(refactorDataForBar(resp.data))
   }
+  
+  const topUserWithConfigAccess = async () => {
+    const resp = await axios.get(`${request.top_user_with_config_access}${days}`)
+    setTopUserWithConfigAccessBar(refactorDataForBar(resp.data))
+  }
+  
+  const barChartThreatSeverityTypes = async () => {
+    const resp = await axios.get(`${request.threats_by_severity_bar}${days}`)
+    setBarThreatSeverityTypes(refactorDataForBar(resp.data))
+  }
+  
+  const barChartAdministrativeActivity = async () => {
+    const resp = await axios.get(`${request.administrative_activity}${days}`)
+    setBarAdministrativeActivity(refactorDataForBar(resp.data))
+  }
+   
 
   useEffect(() => {
     fetchData()
@@ -147,6 +175,10 @@ const Dashboard = ({ match: { params: { days } } }) => {
     fetchData5()
     destinationip()
     threatSeverityMetric()
+	topUserWithConfigAccess()
+	barChartThreatSeverityTypes()
+	metricUniqueUsersWithConfigAccess()
+	barChartAdministrativeActivity()
   }, [days])
 
   return (
@@ -187,9 +219,9 @@ const Dashboard = ({ match: { params: { days } } }) => {
           <DataTable tableData={secondTableChart} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+	   <Grid item xs={12} sm={12}>
         <Paper >
-          <BarChart barData={barChart} />
+          <BarChart barData={barThreatSeverityTypes} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
@@ -199,7 +231,12 @@ const Dashboard = ({ match: { params: { days } } }) => {
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper >
-          <BarChart barData={barChart} />
+          <BarChart barData={topUserWithConfigAccessBar} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper >
+          <BarChart barData={barAdministrativeActivity} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
@@ -214,7 +251,7 @@ const Dashboard = ({ match: { params: { days } } }) => {
       </Grid>
       <Grid item xs={12} sm={6}>
         {
-          numberOfHits.map((hits) =>
+          uniqueUsersWithConfigAccess.map((hits) =>
             <MetricChart hits={hits} />
           )
         }
