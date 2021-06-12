@@ -48,64 +48,58 @@
       "labels": "Top 10 Category By Severity Types - Sonicwall",
       "bar": [
         {
-          "key": "Temp",
-          "doc_count": 69,
-          "severity": "Khaki",
-          "key_time": "2021-02-11"
+          "date": "2021-06-05",
+          "key": "ICMP Echo Reply",
+          "doc_count": 411,
+          "severity": "Low"
         },
         {
-          "key": "Solarbreeze",
-          "doc_count": 40,
-          "severity": "Puce",
-          "key_time": "2021-06-03"
+          "date": "2021-06-05",
+          "key": "INFO SSLv2.0 Client Hello",
+          "doc_count": 27,
+          "severity": "Low"
         },
         {
-          "key": "Tempsoft",
-          "doc_count": 14,
-          "severity": "Fuscia",
-          "key_time": "2021-03-16"
+          "date": "2021-06-05",
+          "key": "INFO SSLv2.0 Client Hello 2",
+          "doc_count": 27,
+          "severity": "Low"
         },
         {
-          "key": "Temp",
-          "doc_count": 48,
-          "severity": "Orange",
-          "key_time": "2021-01-09"
+          "date": "2021-06-06",
+          "key": "ICMP Echo Reply",
+          "doc_count": 100,
+          "severity": "Low"
         },
         {
-          "key": "Zoolab",
-          "doc_count": 13,
-          "severity": "Turquoise",
-          "key_time": "2021-03-16"
+          "date": "2021-06-06",
+          "key": "ICMP PING",
+          "doc_count": 31,
+          "severity": "Low"
         },
         {
-          "key": "Toughjoyfax",
-          "doc_count": 79,
-          "severity": "Khaki",
-          "key_time": "2021-03-22"
+          "date": "2021-06-06",
+          "key": "ICMP PING *NIX",
+          "doc_count": 31,
+          "severity": "Low"
         },
         {
-          "key": "Lotlux",
-          "doc_count": 44,
-          "severity": "Purple",
-          "key_time": "2021-05-18"
+          "date": "2021-06-12",
+          "key": "ICMP Echo Reply",
+          "doc_count": 316,
+          "severity": "Low"
         },
         {
-          "key": "Andalax",
-          "doc_count": 16,
-          "severity": "Crimson",
-          "key_time": "2021-01-29"
+          "date": "2021-06-12",
+          "key": "ICMP PING Microsoft Windows 2",
+          "doc_count": 278,
+          "severity": "Low"
         },
         {
-          "key": "Ventosanzap",
-          "doc_count": 21,
-          "severity": "Khaki",
-          "key_time": "2021-03-25"
-        },
-        {
-          "key": "Voyatouch",
-          "doc_count": 71,
-          "severity": "Aquamarine",
-          "key_time": "2021-01-19"
+          "date": "2021-06-12",
+          "key": "ICMP PING L3retriever",
+          "doc_count": 277,
+          "severity": "Low"
         }
       ]
     }
