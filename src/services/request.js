@@ -9,7 +9,9 @@ const request = {
 	top_user_with_config_access: "/top_user_with_config_access?days=",
 	threats_by_severity_bar: "/threats_by_severity_bar?days=",
 	unique_users_with_config_access: "/unique_users_with_config_access?days=",
-	administrative_activity: "/administrative_activity?days="
+	administrative_activity: "/administrative_activity?days=",
+    errorAlertCountTable: "/error_alert_count_table?days=",
+    requestCategoryScatterCountTable: "/request_category_scatter_count_table?days="
 }
 
 export default request

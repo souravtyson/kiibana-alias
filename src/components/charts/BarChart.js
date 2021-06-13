@@ -6,27 +6,29 @@ function BarChart({ barData }) {
         <Bar
             data={barData}
             options={{
-                title: {
-                    display: true,
-                    text: "Average Rainfall per month",
-                    fontSize: 20
-                },
-                legend: {
-                    display: true,
-                    position: "right"
-                },
-                scales: {
-                    xAxes: [
-                      {
-                        stacked: true,
-                      },
-                    ],
-                    yAxes: [
-                      {
-                        stacked: true,
-                      },
-                    ],
-                  }
+              responsive:true,
+              maintainAspectRatio: false,
+              title: {
+                  display: false,
+                  text: "",
+                  fontSize: 20
+              },
+              legend: {
+                  display: true,
+                  position: "right"
+              },
+              scales: {
+                xAxes: [
+                  {
+                    stacked: true,
+                  },
+                ],
+                yAxes: [
+                  {
+                    stacked: true,
+                  },
+                ],
+              }
             }}
         />
     );

@@ -6,10 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
-    paper: {
-        height: 400,
-        width: 700,
-    },
     root: {
         textAlign: "center"
     },
@@ -22,10 +18,10 @@ const getFormattedNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function MetricChart({ hits }) {
+function MetricChart({ hits, classx}) {
     const classes = useStyles();
     return (
-        <Card className={`${classes.paper} ${classes.root}`} component={Paper}>
+        <Card className={`${classx} ${classes.root}`} component={Paper}>
             <CardContent key={`${hits.value} ${hits.unit}`} className={classes.marginTop}>
                 <Typography variant="h2" component="h2">
                     {hits.unit === 'Count' ? getFormattedNumber(hits.value) : `${hits.value} ${hits.unit}`}

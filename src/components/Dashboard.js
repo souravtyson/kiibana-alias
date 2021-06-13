@@ -34,11 +34,22 @@ const chartState = {
 const useStyles = makeStyles({
   paper: {
     height: 400,
-    width: 700,
+    width: 755,
   },
   barFull: {
     height: 400,
     minWidth: "100vh"
+  },
+  metricPaper: {
+    height: 400,
+    width: 755,
+  },
+  barPaper: {
+    height: 400
+  }, 
+  userAccessPaper: {
+    height: 400,
+    
   }
 });
 
@@ -50,12 +61,14 @@ const Dashboard = ({ match: { params: { days } } }) => {
   const [topUserWithConfigAccessBar, setTopUserWithConfigAccessBar] = useState({})
   const [pieChart, setPieChart] = useState({})
   const [secondPieChart, setSecondPieChart] = useState({})
-  const [tableChart, setTableChart] = useState([])
-  const [secondTableChart, setSecondTableChart] = useState([])
+  const [secondTableChart, setSecondTableChart] = useState({table: [], columns: []})
   const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] = useState([])
   const [barThreatSeverityTypes, setBarThreatSeverityTypes] = useState([])
   const [uniqueUsersWithConfigAccess, setUniqueUsersWithConfigAccess] = useState([])
   const [barAdministrativeActivity, setBarAdministrativeActivity] = useState([])
+  const [errorAlertCountDataTable, setErrorAlertCountDataTable] = useState({table: [], columns: []})
+  const [dataTableRequestCategoryCount, setDataTableRequestCategoryCount] = useState({table: [], columns: []})
+  
   
   
 
@@ -66,8 +79,9 @@ const Dashboard = ({ match: { params: { days } } }) => {
         pie.labels.push(dataSet.key)
         pie.datasets[index].data.push(dataSet.doc_count)
       })
-      pie.datasets[index].label = key.label
+      pie.datasets[index].label = key.labels
     })
+    console.log(pie)
     return pie
   }
 
@@ -105,7 +119,6 @@ const Dashboard = ({ match: { params: { days } } }) => {
         return acc
       }, [])
     })
-	console.log(bar)
     return bar
   }
 
@@ -133,7 +146,12 @@ const Dashboard = ({ match: { params: { days } } }) => {
 
   const fetchData3 = async () => {
     const resp = await axios.get(`${request.ips_severity_table_count}${days}`)
-    setSecondTableChart(resp.data[0].table)
+    resp.data[0]['columns'] = [
+      {field: "key", headerName: "IPS Severity", width: 350},
+      {field: "doc_count", headerName: "Count", width: 120}
+    ]    
+    resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
+    setSecondTableChart(resp.data[0])
   }
 
   const fetchData4 = async () => {
@@ -166,6 +184,25 @@ const Dashboard = ({ match: { params: { days } } }) => {
     setBarAdministrativeActivity(refactorDataForBar(resp.data))
   }
    
+  const dataTableForErrorAlertCount = async () => {
+    const resp = await axios.get(`${request.errorAlertCountTable}${days}`)
+    resp.data[0]['columns'] = [
+      {field: "key", headerName: "Priority", width: 350},
+      {field: "doc_count", headerName: "Count", width: 120}
+    ]
+    resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
+    setErrorAlertCountDataTable(resp.data[0])
+  }
+
+  const dataTableRequestCategoryScatterCount = async () => {
+    const resp = await axios.get(`${request.requestCategoryScatterCountTable}${days}`)
+    resp.data[0]['columns'] = [
+      {field: "key", headerName: "Request Category", width: 400},
+      {field: "doc_count", headerName: "Count", width: 120}
+    ]
+    resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
+    setDataTableRequestCategoryCount(resp.data[0])
+  }
 
   useEffect(() => {
     fetchData()
@@ -175,34 +212,38 @@ const Dashboard = ({ match: { params: { days } } }) => {
     fetchData5()
     destinationip()
     threatSeverityMetric()
-	topUserWithConfigAccess()
-	barChartThreatSeverityTypes()
-	metricUniqueUsersWithConfigAccess()
-	barChartAdministrativeActivity()
+	  topUserWithConfigAccess()
+	  barChartThreatSeverityTypes()
+	  metricUniqueUsersWithConfigAccess()
+	  barChartAdministrativeActivity()
+    dataTableForErrorAlertCount()
+    dataTableRequestCategoryScatterCount()
   }, [days])
 
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={2}>
       <Grid item xs={12} sm={6}>
         {
           numberOfHits.map((hits) =>
-            <MetricChart hits={hits} />
+            <MetricChart hits={hits} classx={classes.metricPaper}/>
           )
         }
       </Grid>
       <Grid item xs={12} sm={6}>
         {
           numberOfTraffic.map((traffic) =>
-            <MetricChart hits={traffic} />
+            <MetricChart hits={traffic} classx={classes.metricPaper}/>
           )
         }
       </Grid>
       <Grid item sm={6} xs={12}>
+        {/* <div>{pieChart.datasets[0].label}</div> */}
         <Paper className={classes.paper} >
           <PieChart pieData={pieChart} />
         </Paper>
       </Grid>
       <Grid item sm={6} xs={12}>
+        {/* <div>{secondPieChart.datasets[0].label}</div> */}
         <Paper className={classes.paper} >
           <PieChart pieData={secondPieChart} />
         </Paper>
@@ -210,51 +251,57 @@ const Dashboard = ({ match: { params: { days } } }) => {
       <Grid item xs={12} sm={6}>
         {
           numberOfThreatSeverityMetric.map((traffic) =>
-            <MetricChart hits={traffic} />
+            <MetricChart hits={traffic} classx={classes.metricPaper}/>
           )
         }
       </Grid>
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper} >
-          <DataTable tableData={secondTableChart} />
+          {/* <div>{secondTableChart.labels}</div> */}
+          <DataTable tableData={secondTableChart.table} columns={secondTableChart.columns}/>
         </Paper>
       </Grid>
 	   <Grid item xs={12} sm={12}>
-        <Paper >
+        <Paper className={classes.barPaper}>
           <BarChart barData={barThreatSeverityTypes} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper >
+        <Paper className={classes.barPaper}>
           <BarChart barData={barChart} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper >
+      <Grid item xs={12} sm={3}>
+        {
+          uniqueUsersWithConfigAccess.map((hits) =>
+            <MetricChart hits={hits} classx={classes.userAccessPaper}/>
+          )
+        }
+      </Grid>
+      <Grid item xs={12} sm={9}>
+        <Paper className={classes.barPaper}>
           <BarChart barData={topUserWithConfigAccessBar} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
-        <Paper >
+        <Paper className={classes.barPaper}>
           <BarChart barData={barAdministrativeActivity} />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={12}>
-        <Paper >
-          <BarChart barData={barChart} />
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
         <Paper className={classes.paper}>
-          <DataTable tableData={tableChart} />
+          <DataTable tableData={errorAlertCountDataTable.table} columns={errorAlertCountDataTable.columns}/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
-        {
-          uniqueUsersWithConfigAccess.map((hits) =>
-            <MetricChart hits={hits} />
-          )
-        }
+        <Paper className={classes.paper}>
+          <DataTable tableData={dataTableRequestCategoryCount.table} columns={dataTableRequestCategoryCount.columns}/>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} sm={12}>
+        <Paper className={classes.barPaper}>
+          <BarChart barData="" />
+        </Paper>
       </Grid>
     </Grid>
   );

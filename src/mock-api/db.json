@@ -152,5 +152,142 @@
   "nwtraffic": [{ "value": 95.5, "labels": "Network Traffic", "unit": "GB" }],
   "threatBySeverity": [
     { "value": 95.5, "labels": "Threat By Severity Count", "unit": "GB" }
+  ],
+  "uniqueUsersWithConfigAccess": [
+    {
+      "labels": "Sonicwall - Unique Users with config access", 
+      "unit": "Count", 
+      "value": 4
+    }
+  ],
+  "administrativeActivity":[
+    {
+      "bar": [
+        {
+          "date": "2021-06-12", 
+          "doc_count": 2, 
+          "key": "Configuration mode administration session ended"
+        }, 
+        {
+          "date": "2021-06-12", 
+          "doc_count": 2, 
+          "key": "Configuration mode administration session started"
+        }, 
+        {
+          "date": "2021-06-12", 
+          "doc_count": 2, 
+          "key": "GUI administration session ended"
+        }
+      ], 
+      "label": "Sonicwall - User with Config Access"
+    }
+  ],
+  "threatsBySeverityBar":[
+    {
+      "bar": [
+        {
+          "date": "2021-03-06", 
+          "doc_count": 1, 
+          "key": "Medium"
+        }
+      ], 
+      "labels": "IPS: High or Medium Severity"
+    }
+  ],
+  "topUserWithConfigAccess": [
+    {
+      "bar": [
+        {
+          "date": "2021-06-12", 
+          "doc_count": 2, 
+          "key": "harikumar.m"
+        }, 
+        {
+          "date": "2021-06-12", 
+          "doc_count": 2, 
+          "key": "maheshreddy.y"
+        }, 
+        {
+          "date": "2021-06-12", 
+          "doc_count": 1, 
+          "key": "harikumar.m@ites.org"
+        }, 
+        {
+          "date": "2021-06-12", 
+          "doc_count": 1, 
+          "key": "maheshreddy.y@ites.org"
+        }
+      ], 
+      "label": "Sonicwall - User with Config Access"
+    }
+  ],
+  "errorAlertCountTable": [
+    {
+      "labels": "Sonicwall - Error & Alert Count", 
+      "table": [
+        {
+          "doc_count": 1, 
+          "key": "Alert"
+        }
+      ]
+    }
+  ],
+  "ipsSeverityTableCount": [
+    {
+      "labels": "IPS: High or Medium Severity", 
+      "table": [
+        {
+          "doc_count": 1, 
+          "key": "Medium"
+        }
+      ]
+    }
+  ],
+  "requestCategoryCount": [
+    {
+      "labels": "Sonicwall - Request category", 
+      "table": [
+        {
+          "doc_count": 372, 
+          "key": "Administrative Custom List settings"
+        }, 
+        {
+          "doc_count": 314, 
+          "key": "Information Technology/Computers"
+        }, 
+        {
+          "doc_count": 41, 
+          "key": "Search Engines and Portals"
+        }, 
+        {
+          "doc_count": 31, 
+          "key": "Freeware/Software Downloads"
+        }, 
+        {
+          "doc_count": 7, 
+          "key": "Business and Economy"
+        }, 
+        {
+          "doc_count": 6, 
+          "key": "Education"
+        }, 
+        {
+          "doc_count": 3, 
+          "key": "Multimedia"
+        }, 
+        {
+          "doc_count": 2, 
+          "key": "Arts/Entertainment"
+        }, 
+        {
+          "doc_count": 1, 
+          "key": "Games"
+        }, 
+        {
+          "doc_count": 1, 
+          "key": "Web Communications"
+        }
+      ]
+    }
   ]
 }

@@ -4,5 +4,12 @@
   "/srcip/top_ten?days=:days": "/srcip",
   "/destip/top_ten?days=:days": "/destip",
   "/threat_by_severity_count?days=:days": "/threatBySeverity",
-  "/top_ten_category_by_severity_types?days=:days": "/topTenCategoryBySeverityType"
+  "/top_ten_category_by_severity_types?days=:days": "/topTenCategoryBySeverityType",
+  "/top_user_with_config_access?days=:days": "/topUserWithConfigAccess",
+  "/threats_by_severity_bar?days=:days": "/threatsBySeverityBar",
+  "/unique_users_with_config_access?days=:days": "/uniqueUsersWithConfigAccess",
+  "/administrative_activity?days=:days": "/administrativeActivity",
+  "/error_alert_count_table?days=:days": "/errorAlertCountTable",
+  "/ips_severity_table_count?days=:days": "/ipsSeverityTableCount",
+  "/request_category_scatter_count_table?days=:days": "/requestCategoryCount"
 }

@@ -13,7 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import Dashboard from './Dashboard';
 
-const drawerWidth = 240;
+const drawerWidth = 140;
 
 const useStyles = makeStyles((theme) => ({
     root: {
