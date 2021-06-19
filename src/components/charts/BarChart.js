@@ -1,9 +1,9 @@
 import React from 'react';
 import { Bar } from "react-chartjs-2";
 
-function BarChart({ barData }) {
+function BarChart({ barData, id }) {
     return (
-        <Bar
+        <Bar id={id}
             data={barData}
             options={{
               responsive:true,

@@ -222,28 +222,26 @@ const Dashboard = ({ match: { params: { days } } }) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} id="metricnumberofhits">
         {
           numberOfHits.map((hits) =>
             <MetricChart hits={hits} classx={classes.metricPaper}/>
           )
         }
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} id="metrictraffic">
         {
           numberOfTraffic.map((traffic) =>
             <MetricChart hits={traffic} classx={classes.metricPaper}/>
           )
         }
       </Grid>
-      <Grid item sm={6} xs={12}>
-        {/* <div>{pieChart.datasets[0].label}</div> */}
+      <Grid item sm={6} xs={12} id="piecheck">
         <Paper className={classes.paper} >
           <PieChart pieData={pieChart} />
         </Paper>
       </Grid>
       <Grid item sm={6} xs={12}>
-        {/* <div>{secondPieChart.datasets[0].label}</div> */}
         <Paper className={classes.paper} >
           <PieChart pieData={secondPieChart} />
         </Paper>
@@ -255,20 +253,20 @@ const Dashboard = ({ match: { params: { days } } }) => {
           )
         }
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper} >
+      <Grid item xs={12} sm={6} >
+        <Paper className={classes.paper} id="datatablecheck">
           {/* <div>{secondTableChart.labels}</div> */}
           <DataTable tableData={secondTableChart.table} columns={secondTableChart.columns}/>
         </Paper>
       </Grid>
-	   <Grid item xs={12} sm={12}>
+	   <Grid item xs={12} sm={12} id="barcheck">
         <Paper className={classes.barPaper}>
-          <BarChart barData={barThreatSeverityTypes} />
+          <BarChart barData={barThreatSeverityTypes} id="firstBar"/>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={12} id="barchart2">
         <Paper className={classes.barPaper}>
-          <BarChart barData={barChart} />
+          <BarChart barData={barChart} id="secondbar"/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={3}>
@@ -280,12 +278,12 @@ const Dashboard = ({ match: { params: { days } } }) => {
       </Grid>
       <Grid item xs={12} sm={9}>
         <Paper className={classes.barPaper}>
-          <BarChart barData={topUserWithConfigAccessBar} />
+          <BarChart barData={topUserWithConfigAccessBar} id="thirdbar"/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper className={classes.barPaper}>
-          <BarChart barData={barAdministrativeActivity} />
+          <BarChart barData={barAdministrativeActivity} id="fourthbar"/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -293,14 +291,14 @@ const Dashboard = ({ match: { params: { days } } }) => {
           <DataTable tableData={errorAlertCountDataTable.table} columns={errorAlertCountDataTable.columns}/>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} id="tablerequestcategorycount">
         <Paper className={classes.paper}>
           <DataTable tableData={dataTableRequestCategoryCount.table} columns={dataTableRequestCategoryCount.columns}/>
         </Paper>
       </Grid>
       <Grid item xs={12} sm={12}>
         <Paper className={classes.barPaper}>
-          <BarChart barData="" />
+          <BarChart barData="" id="fifthbar"/>
         </Paper>
       </Grid>
     </Grid>
