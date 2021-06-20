@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const divId = ['metricnumberofhits','metrictraffic','piecheck','datatablecheck','barcheck','barchart2','tablerequestcategorycount']
+const divId = ['log_count','nw_traffic','src_ip','dest_ip','threat_metric','threat_table','threat_bar','category_bar','user_metric','user_bar','admin_bar','error_table','req_cat_table','sys_access_bar','priority_bar','metric_trojan','trojan_table','metric_web','web_table']
 
 export default function SideBar() {
   const classes = useStyles();
