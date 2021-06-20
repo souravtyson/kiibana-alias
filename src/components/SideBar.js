@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Switch, Route, Link, Redirect } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,7 +12,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import html2canvas from 'html2canvas';
 import { jsPDF } from "jspdf";
-
+import domtoimage from 'dom-to-image';
 import Dashboard from './Dashboard';
 
 const drawerWidth = 140;
@@ -40,37 +40,37 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const divId = ['metricnumberofhits','metrictraffic','piecheck','datatablecheck','barcheck','barchart2','tablerequestcategorycount']
+
 export default function SideBar() {
   const classes = useStyles();
-  const sideBarOption = [{label: '7 Days', path: "seven", days: 7}, {label: '30 Days', path: 'thirty', days: 30}]
+  const sideBarOption = [{label: '7 Days', path: "seven", days: 7}, {label: '30 Days', path: 'thirty', days: 30},{label: '90 Days', path: 'ninty', days: 90}, {label: '1 Year', path: 'year', days: 365}]
   const [defaultPath] = useState(7)
-  const [htmlAsImageList, setHtmlAsImageList] = useState([])
-  const [divId, setDivId] = useState(['metricnumberofhits','metrictraffic','piecheck','datatablecheck','barcheck','barchart2','tablerequestcategorycount'])
+  const [htmlAsImageList, setHtmlAsImageList] = useState({isDone: false, imageList: []})
+
+  useEffect(() => {
+    if(htmlAsImageList.isDone){
+      generatePDF()
+    }
+  },[htmlAsImageList.isDone])
 
   const convertHTMLToCanvas = () => {
     const x = []
-    divId.forEach((id) => {
+    divId.forEach((id, index) => {
       let element = document.getElementById(id)
       if(element){
-        html2canvas(element, {
-          logging: false
-        }).then((canvas) => {
-          console.log(canvas)
-          let contentWidth = canvas.width;
-          let contentHeight = canvas.height;
-          let imgWidth = 595.28;
-          let imgHeight = 592.28 / contentWidth * contentHeight;
-          var imgData = canvas.toDataURL('image/jpeg', 1.0);
-          let dataObj = {
-            imgWidth: imgWidth,
-            imgHeight: imgHeight,
-            imgData: imgData
-          }
-          x.push(dataObj)
-        }).then(() => {
-          setHtmlAsImageList(x);
-          if(x.length === 7){
-            generatePDF()
+        domtoimage.toPng(element, {
+          cacheBust: true,
+        })
+        .then(function (dataUrl) {
+          var htmlImage = new Image();
+          htmlImage.src = dataUrl;          
+          x.push(htmlImage)
+          var obj = {}
+          if(index === divId.length - 1){
+            obj['isDone'] = true
+            obj['imageList'] = x
+            setHtmlAsImageList(obj);
           }
         })
       }else{
@@ -82,39 +82,52 @@ export default function SideBar() {
   }
 
   const generatePDF = () => {
-    const pdf = new jsPDF('', 'pt', 'a4');
-    htmlAsImageList.forEach(({imgData, imgWidth, imgHeight},index) => {
-      if(index !== 0){
-        pdf.addPage()
-      }
-      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-    })
-    pdf.save("download.pdf");  
+    try{
+      const pdf = new jsPDF('l', 'pt', [800, 470]);
+      htmlAsImageList.imageList.forEach((imgData,index) => {
+        if(index !== 0){
+          pdf.addPage()
+        }
+        pdf.addImage(imgData, 25, 50, 750, 400);
+      })
+      pdf.save("download.pdf");  
+    }catch(e){
+      console.log(e)
+    }finally{
+      setHtmlAsImageList({isDone: false, imageList: []})
+    }
   }
 
   const downLoadGraph = () => {
-    console.log('hello')
-    html2canvas(document.getElementById("barcheck"), { 
-      letterRendering: 1,
-      allowTaint : true,
-      useCORS: true,
-      logging: true,
-    }).then(canvas => {
-      console.log(canvas)
-      let contentWidth = canvas.width;
-      let contentHeight = canvas.height;
-      let imgWidth = 595.28;
-      let imgHeight = 592.28 / contentWidth * contentHeight;
-      canvas.getContext('2d');
-      var imgData = canvas.toDataURL('image/jpeg', 1.0);
-      const pdf = new jsPDF('', 'pt', 'a4');
-      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-      pdf.save("download.pdf");  
-      // const a = document.createElement("a");
-      // a.href = canvas.toDataURL('image/png');
-      // a.download = 'Canvas.png';
-      // a.click();
+    domtoimage.toJpeg(document.getElementById('tablerequestcategorycount'), { quality: 0.95 })
+    .then(function (dataUrl) {
+        var link = document.createElement('a');
+        link.download = 'my-image-name.jpeg';
+        link.href = dataUrl;
+        link.click();
     });
+    // console.log('hello')
+    // html2canvas(document.getElementById("barcheck"), { 
+    //   letterRendering: 1,
+    //   allowTaint : true,
+    //   useCORS: true,
+    //   logging: true,
+    // }).then(canvas => {
+    //   console.log(canvas)
+    //   let contentWidth = canvas.width;
+    //   let contentHeight = canvas.height;
+    //   let imgWidth = 595.28;
+    //   let imgHeight = 592.28 / contentWidth * contentHeight;
+    //   canvas.getContext('2d');
+    //   var imgData = canvas.toDataURL('image/jpeg', 1.0);
+    //   const pdf = new jsPDF('', 'pt', 'a4');
+    //   pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+    //   pdf.save("download.pdf");  
+    //   // const a = document.createElement("a");
+    //   // a.href = canvas.toDataURL('image/png');
+    //   // a.download = 'Canvas.png';
+    //   // a.click();
+    // });
   }
 
   return (
