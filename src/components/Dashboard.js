@@ -68,6 +68,16 @@ const Dashboard = ({ match: { params: { days } } }) => {
   const [barAdministrativeActivity, setBarAdministrativeActivity] = useState([])
   const [errorAlertCountDataTable, setErrorAlertCountDataTable] = useState({table: [], columns: []})
   const [dataTableRequestCategoryCount, setDataTableRequestCategoryCount] = useState({table: [], columns: []})
+  const [barSystemAccessByCategory, setBarSystemAccessByCategory] = useState([])
+  const [barPriorityEventsBar, setBarPriorityEventsBar] = useState([])
+  const [numberOfBlockedTrojanCount, setNumberOfBlockedTrojanCount] = useState([])
+  const [dataTableBlockedTrojanDetails, setDataTableBlockedTrojanDetails] = useState({table: [], columns: []})
+  const [numberOfWebAttackCount, setNumberOfWebAttackCount] = useState([])
+  const [dataTableWebAttackDetails, setDataTableWebAttackDetails] = useState({table: [], columns: []})
+  
+  
+  
+  
   
   
   
@@ -203,7 +213,48 @@ const Dashboard = ({ match: { params: { days } } }) => {
     resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
     setDataTableRequestCategoryCount(resp.data[0])
   }
-
+  
+  const barChartSystemAccessByCategory = async () => {
+    const resp = await axios.get(`${request.system_access_by_category}${days}`)
+    setBarSystemAccessByCategory(refactorDataForBar(resp.data))
+  }
+  
+  const barChartPriorityEventsBar = async () => {
+    const resp = await axios.get(`${request.priority_events_bar}${days}`)
+    setBarPriorityEventsBar(refactorDataForBar(resp.data))
+  }
+  
+  const metricNumberOfBlockedTrojanCount = async () => {
+    const resp = await axios.get(`${request.blocked_trojan_count}${days}`)
+    setNumberOfBlockedTrojanCount(resp.data)
+  }
+  
+  const blockedTrojanDetails = async () => {
+    const resp = await axios.get(`${request.blocked_trojan_details_table}${days}`)
+    resp.data[0]['columns'] = [
+      {field: "key", headerName: "Trojan Details", width: 400},
+      {field: "doc_count", headerName: "Count", width: 120}
+    ]
+    resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
+    setDataTableBlockedTrojanDetails(resp.data[0])
+  }
+  
+  const metricNumberOfWebAttackCount = async () => {
+    const resp = await axios.get(`${request.web_attack_count}${days}`)
+    setNumberOfWebAttackCount(resp.data)
+  }
+  
+  const webAttackDetails = async () => {
+    const resp = await axios.get(`${request.web_attack_details_table}${days}`)
+    resp.data[0]['columns'] = [
+      {field: "key", headerName: "TWeb Attack Details", width: 400},
+      {field: "doc_count", headerName: "Count", width: 120}
+    ]
+    resp.data[0].table.forEach((eachRow, index) => eachRow['id'] = index + 1)
+    setDataTableWebAttackDetails(resp.data[0])
+  }
+  
+  	
   useEffect(() => {
     fetchData()
     fetchData2()
@@ -218,87 +269,124 @@ const Dashboard = ({ match: { params: { days } } }) => {
 	  barChartAdministrativeActivity()
     dataTableForErrorAlertCount()
     dataTableRequestCategoryScatterCount()
+	barChartSystemAccessByCategory()
+	barChartPriorityEventsBar()
+	metricNumberOfBlockedTrojanCount()
+	blockedTrojanDetails()
+	metricNumberOfWebAttackCount()
+	webAttackDetails()
   }, [days])
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6} id="metricnumberofhits">
+      <Grid item xs={12} sm={6} id="log_count">
         {
           numberOfHits.map((hits) =>
             <MetricChart hits={hits} classx={classes.metricPaper}/>
           )
         }
       </Grid>
-      <Grid item xs={12} sm={6} id="metrictraffic">
+      <Grid item xs={12} sm={6} id="nw_traffic">
         {
           numberOfTraffic.map((traffic) =>
             <MetricChart hits={traffic} classx={classes.metricPaper}/>
           )
         }
       </Grid>
-      <Grid item sm={6} xs={12} id="piecheck">
+      <Grid item sm={6} xs={12} id = "src_ip" >
+        {/* <div>{pieChart.datasets[0].label}</div> */}
         <Paper className={classes.paper} >
-          <PieChart pieData={pieChart} />
+          <PieChart pieData={pieChart}  />
         </Paper>
       </Grid>
-      <Grid item sm={6} xs={12}>
+      <Grid item sm={6} xs={12} id = "dest_ip">
+        {/* <div>{secondPieChart.datasets[0].label}</div> */}
         <Paper className={classes.paper} >
           <PieChart pieData={secondPieChart} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} id = "threat_metric">
         {
           numberOfThreatSeverityMetric.map((traffic) =>
             <MetricChart hits={traffic} classx={classes.metricPaper}/>
           )
         }
       </Grid>
-      <Grid item xs={12} sm={6} >
-        <Paper className={classes.paper} id="datatablecheck">
+      <Grid item xs={12} sm={6} id = "threat_table">
+        <Paper className={classes.paper} >
           {/* <div>{secondTableChart.labels}</div> */}
           <DataTable tableData={secondTableChart.table} columns={secondTableChart.columns}/>
         </Paper>
       </Grid>
-	   <Grid item xs={12} sm={12} id="barcheck">
+	   <Grid item xs={12} sm={12} id = "threat_bar">
         <Paper className={classes.barPaper}>
-          <BarChart barData={barThreatSeverityTypes} id="firstBar"/>
+          <BarChart barData={barThreatSeverityTypes} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12} id="barchart2">
+      <Grid item xs={12} sm={12} id = "category_bar">
         <Paper className={classes.barPaper}>
-          <BarChart barData={barChart} id="secondbar"/>
+          <BarChart barData={barChart} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} sm={3} id = "user_metric">
         {
           uniqueUsersWithConfigAccess.map((hits) =>
             <MetricChart hits={hits} classx={classes.userAccessPaper}/>
           )
         }
       </Grid>
-      <Grid item xs={12} sm={9}>
+      <Grid item xs={12} sm={9} id = "user_bar">
         <Paper className={classes.barPaper}>
-          <BarChart barData={topUserWithConfigAccessBar} id="thirdbar"/>
+          <BarChart barData={topUserWithConfigAccessBar}/>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={12} id = "admin_bar">
         <Paper className={classes.barPaper}>
-          <BarChart barData={barAdministrativeActivity} id="fourthbar"/>
+          <BarChart barData={barAdministrativeActivity} />
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={6} id = "error_table">
         <Paper className={classes.paper}>
           <DataTable tableData={errorAlertCountDataTable.table} columns={errorAlertCountDataTable.columns}/>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={6} id="tablerequestcategorycount">
+      <Grid item xs={12} sm={6} id = "req_cat_table">
         <Paper className={classes.paper}>
           <DataTable tableData={dataTableRequestCategoryCount.table} columns={dataTableRequestCategoryCount.columns}/>
         </Paper>
       </Grid>
-      <Grid item xs={12} sm={12}>
+      <Grid item xs={12} sm={12} id = "sys_access_bar">
         <Paper className={classes.barPaper}>
-          <BarChart barData="" id="fifthbar"/>
+          <BarChart barData={barSystemAccessByCategory} />
+        </Paper>
+      </Grid>
+	  <Grid item xs={12} sm={12} id = "priority_bar">
+        <Paper className={classes.barPaper}>
+          <BarChart barData={barPriorityEventsBar} />
+        </Paper>
+      </Grid>
+	  <Grid item xs={12} sm={6} id = "metric_trojan">
+        {
+          numberOfBlockedTrojanCount.map((hits) =>
+            <MetricChart hits={hits} classx={classes.metricPaper}/>
+          )
+        }
+      </Grid>
+	  <Grid item xs={12} sm={6} id = "trojan_table">
+        <Paper className={classes.paper}>
+          <DataTable tableData={dataTableBlockedTrojanDetails.table} columns={dataTableBlockedTrojanDetails.columns}/>
+        </Paper>
+      </Grid>
+	  <Grid item xs={12} sm={6} id = "metric_web">
+        {
+          numberOfWebAttackCount.map((hits) =>
+            <MetricChart hits={hits} classx={classes.metricPaper}/>
+          )
+        }
+      </Grid>
+	  <Grid item xs={12} sm={6} id = "web_table">
+        <Paper className={classes.paper}>
+          <DataTable tableData={dataTableWebAttackDetails.table} columns={dataTableWebAttackDetails.columns}/>
         </Paper>
       </Grid>
     </Grid>
