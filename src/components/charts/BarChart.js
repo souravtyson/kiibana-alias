@@ -21,7 +21,7 @@ function BarChart({ barData, id }) {
                 xAxes: [
                   {
                     stacked: true,
-                  },
+                  }
                 ],
                 yAxes: [
                   {

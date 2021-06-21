@@ -9,19 +9,14 @@ import DataTable from "components/charts/DataTable";
 import axios from "services/axios";
 import request from "services/request";
 import colors from "styles/color.js";
+import * as util from "utility/utils.js"
 
 const chartState = {
   labels: [],
   datasets: [
     {
       label: "",
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-        "rgba(255, 205, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-      ],
+      backgroundColor: [],
       borderColor: "rgba(0,0,0,1)",
       borderWidth: 2,
       data: [],
@@ -50,52 +45,27 @@ const useStyles = makeStyles({
   },
 });
 
-const Dashboard = ({
-  match: {
-    params: { days },
-  },
-}) => {
+const Dashboard = ({ match: { params: { days } }}) => {
   const classes = useStyles();
   const [numberOfHits, setNumberOfHits] = useState([]);
   const [numberOfTraffic, setNumberOfTraffic] = useState([]);
   const [barChart, setBarChart] = useState({});
-  const [topUserWithConfigAccessBar, setTopUserWithConfigAccessBar] = useState(
-    {}
-  );
+  const [topUserWithConfigAccessBar, setTopUserWithConfigAccessBar] = useState({});
   const [pieChart, setPieChart] = useState({});
   const [secondPieChart, setSecondPieChart] = useState({});
-  const [secondTableChart, setSecondTableChart] = useState({
-    table: [],
-    columns: [],
-  });
-  const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] =
-    useState([]);
+  const [secondTableChart, setSecondTableChart] = useState({ table: [], columns: [] });
+  const [numberOfThreatSeverityMetric, setNumberOfThreatSeverityMetric] = useState([]);
   const [barThreatSeverityTypes, setBarThreatSeverityTypes] = useState([]);
-  const [uniqueUsersWithConfigAccess, setUniqueUsersWithConfigAccess] =
-    useState([]);
-  const [barAdministrativeActivity, setBarAdministrativeActivity] = useState(
-    []
-  );
-  const [errorAlertCountDataTable, setErrorAlertCountDataTable] = useState({
-    table: [],
-    columns: [],
-  });
-  const [dataTableRequestCategoryCount, setDataTableRequestCategoryCount] =
-    useState({ table: [], columns: [] });
-  const [barSystemAccessByCategory, setBarSystemAccessByCategory] = useState(
-    []
-  );
+  const [uniqueUsersWithConfigAccess, setUniqueUsersWithConfigAccess] = useState([]);
+  const [barAdministrativeActivity, setBarAdministrativeActivity] = useState([]);
+  const [errorAlertCountDataTable, setErrorAlertCountDataTable] = useState({ table: [], columns: [] });
+  const [dataTableRequestCategoryCount, setDataTableRequestCategoryCount] = useState({ table: [], columns: [] });
+  const [barSystemAccessByCategory, setBarSystemAccessByCategory] = useState([]);
   const [barPriorityEventsBar, setBarPriorityEventsBar] = useState([]);
-  const [numberOfBlockedTrojanCount, setNumberOfBlockedTrojanCount] = useState(
-    []
-  );
-  const [dataTableBlockedTrojanDetails, setDataTableBlockedTrojanDetails] =
-    useState({ table: [], columns: [] });
+  const [numberOfBlockedTrojanCount, setNumberOfBlockedTrojanCount] = useState([]);
+  const [dataTableBlockedTrojanDetails, setDataTableBlockedTrojanDetails] = useState({ table: [], columns: [] });
   const [numberOfWebAttackCount, setNumberOfWebAttackCount] = useState([]);
-  const [dataTableWebAttackDetails, setDataTableWebAttackDetails] = useState({
-    table: [],
-    columns: [],
-  });
+  const [dataTableWebAttackDetails, setDataTableWebAttackDetails] = useState({ table: [], columns: [] });
 
   const refactorDataForPie = (pieData) => {
     const pie = JSON.parse(JSON.stringify(chartState));
@@ -103,6 +73,7 @@ const Dashboard = ({
       key.pie.forEach((dataSet) => {
         pie.labels.push(dataSet.key);
         pie.datasets[index].data.push(dataSet.doc_count);
+        pie.datasets[index].backgroundColor.push(util.getRandomColor())
       });
       pie.datasets[index].label = key.labels;
     });
@@ -110,20 +81,16 @@ const Dashboard = ({
     return pie;
   };
 
-  function getRandomColor() {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  const getFromToDates = function(){
+    var today = new Date();
+    today.setDate(today.getDate() - days)
+    return today;
   }
 
   const refactorDataForBar = (barData) => {
     const bar = JSON.parse(JSON.stringify(chartState));
-    const dateStamp = [
-      ...new Set(barData[0].bar.map((severity) => severity.date)),
-    ];
+    var dates = util.getDates(getFromToDates(), new Date());                                                                                                    
+    const dateStamp = dates;
     bar.labels = [...dateStamp];
     barData.forEach((key) => {
       bar.datasets = key.bar.reduce((acc, data, index) => {
@@ -134,8 +101,7 @@ const Dashboard = ({
             label: data.key,
             data: new Array(dateStamp.length).fill(0),
             stack: "1",
-            backgroundColor:
-              colors[Math.floor(Math.random() * (colors.length - 1))],
+            backgroundColor: colors[Math.floor(Math.random() * (colors.length - 1))],
             borderColor: "rgba(0,0,0,1)",
             borderWidth: 2,
           };
@@ -300,6 +266,7 @@ const Dashboard = ({
     blockedTrojanDetails();
     metricNumberOfWebAttackCount();
     webAttackDetails();
+    console.log('check')
   }, [days]);
 
   return (

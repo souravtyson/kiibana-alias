@@ -10,10 +10,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import domtoimage from "dom-to-image";
 import Dashboard from "./Dashboard";
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 const drawerWidth = 140;
 
@@ -38,6 +38,17 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  title: {
+    flexGrow: 1
+  },
+  buttonStyle: {
+    border : 'none',
+    background: 'none',
+    width: '70px',
+    height: '55px',
+    color: 'white',
+    cursor: 'pointer'
+  }
 }));
 
 const divId = [
@@ -167,10 +178,10 @@ export default function SideBar() {
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          <button onClick={convertHTMLToCanvas}>Download Canvas</button>
+          <button className={classes.buttonStyle} onClick={convertHTMLToCanvas}><GetAppIcon /> Report</button>
         </Toolbar>
       </AppBar>
       <Drawer

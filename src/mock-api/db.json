@@ -48,55 +48,55 @@
       "labels": "Top 10 Category By Severity Types - Sonicwall",
       "bar": [
         {
-          "date": "2021-06-05",
+          "date": "2021-06-21",
           "key": "ICMP Echo Reply",
           "doc_count": 411,
           "severity": "Low"
         },
         {
-          "date": "2021-06-05",
+          "date": "2021-06-21",
           "key": "INFO SSLv2.0 Client Hello",
           "doc_count": 27,
           "severity": "Low"
         },
         {
-          "date": "2021-06-05",
+          "date": "2021-06-21",
           "key": "INFO SSLv2.0 Client Hello 2",
           "doc_count": 27,
           "severity": "Low"
         },
         {
-          "date": "2021-06-06",
+          "date": "2021-06-17",
           "key": "ICMP Echo Reply",
           "doc_count": 100,
           "severity": "Low"
         },
         {
-          "date": "2021-06-06",
+          "date": "2021-06-17",
           "key": "ICMP PING",
           "doc_count": 31,
           "severity": "Low"
         },
         {
-          "date": "2021-06-06",
+          "date": "2021-06-17",
           "key": "ICMP PING *NIX",
           "doc_count": 31,
           "severity": "Low"
         },
         {
-          "date": "2021-06-12",
+          "date": "2021-06-18",
           "key": "ICMP Echo Reply",
           "doc_count": 316,
           "severity": "Low"
         },
         {
-          "date": "2021-06-12",
+          "date": "2021-06-18",
           "key": "ICMP PING Microsoft Windows 2",
           "doc_count": 278,
           "severity": "Low"
         },
         {
-          "date": "2021-06-12",
+          "date": "2021-06-18",
           "key": "ICMP PING L3retriever",
           "doc_count": 277,
           "severity": "Low"
