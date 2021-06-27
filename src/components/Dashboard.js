@@ -26,16 +26,14 @@ const chartState = {
 
 const useStyles = makeStyles({
   paper: {
-    height: 400,
-    width: 755,
+    height: 400
   },
   barFull: {
     height: 400,
     minWidth: "100vh",
   },
   metricPaper: {
-    height: 400,
-    width: 755,
+    height: 400
   },
   barPaper: {
     height: 400,
@@ -270,7 +268,7 @@ const Dashboard = ({ match: { params: { days } }}) => {
   }, [days]);
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1}>
       <Grid item xs={12} sm={6} id="log_count">
         {numberOfHits.map((hits) => (
           <MetricChart hits={hits} classx={classes.metricPaper} />
