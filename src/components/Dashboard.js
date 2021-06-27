@@ -264,7 +264,6 @@ const Dashboard = ({ match: { params: { days } }}) => {
     blockedTrojanDetails();
     metricNumberOfWebAttackCount();
     webAttackDetails();
-    console.log('check')
   }, [days]);
 
   return (
